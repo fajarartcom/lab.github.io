@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Sistem Informasi Laboratorium SMK NU 1 KEDUNGPRING</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, 'Segoe UI', 'Inter', 'Roboto', sans-serif;
+        }
+
+        body {
+            background: #f1f5f9;
+            padding: 20px;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        body.dark {
+            background: #0f172a;
+            color: #e2e8f0;
+        }
+
+        .app-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 30px;
+            background: white;
+            padding: 15px 25px;
+            border-radius: 28px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        body.dark .header {
+            background: #1e293b;
+        }
+
+        h1 {
+            font-size: 1.7rem;
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .btn {
+            padding: 8px 18px;
+            border: none;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            background: #e2e8f0;
+            color: #1e293b;
+        }
+
+        .btn-primary {
+            background: #2563eb;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: #dc2626;
+            color: white;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #94a3b8;
+        }
+
+        .btn-success {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-warning {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .realtime-badge {
+            background: #10b98120;
+            color: #10b981;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .realtime-badge.offline {
+            background: #ef444420;
+            color: #ef4444;
+        }
+
+        .search-section {
+            background: white;
+            border-radius: 28px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        body.dark .search-section {
+            background: #1e293b;
+        }
+
+        .search-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .search-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .form-group label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #475569;
+        }
+
+        body.dark .form-group label {
+            color: #94a3b8;
+        }
+
+        input, select, textarea {
+            padding: 10px 14px;
+            border-radius: 20px;
+            border: 1px solid #cbd5e1;
+            background: #f8fafc;
+            font-size: 0.9rem;
+        }
+
+        body.dark input, body.dark select, body.dark textarea {
+            background: #0f172a;
+            border-color: #334155;
+            color: white;
+        }
+
+        .search-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .filter-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .chip {
+            padding: 6px 14px;
+            border-radius: 30px;
+            background: #e2e8f0;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.85rem;
+        }
+
+        .chip.active {
+            background: #2563eb;
+            color: white;
+        }
+
+        body.dark .chip {
+            background: #334155;
+            color: #e2e8f0;
+        }
+
+        .lab-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .lab-card {
+            background: white;
+            border-radius: 28px;
+            padding: 20px;
+            transition: 0.2s;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+            border-left: 8px solid #10b981;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        body.dark .lab-card {
+            background: #1e293b;
+        }
+
+        .lab-card.highlight {
+            border-left: 8px solid #f59e0b;
+            background: #fef3c7;
+        }
+
+        body.dark .lab-card.highlight {
+            background: #2d1f00;
+        }
+
+        .lab-status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            margin-top: 8px;
+        }
+
+        .status-tersedia { background: #10b98120; color: #10b981; border-left: 3px solid #10b981; }
+        .status-digunakan { background: #f59e0b20; color: #f59e0b; border-left: 3px solid #f59e0b; }
+        .status-perbaikan { background: #ef444420; color: #ef4444; border-left: 3px solid #ef4444; }
+
+        .section-title {
+            font-weight: 700;
+            margin: 15px 0 8px 0;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #475569;
+        }
+
+        body.dark .section-title {
+            color: #94a3b8;
+        }
+
+        .info-item {
+            font-size: 0.85rem;
+            padding: 5px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .match-badge {
+            display: inline-block;
+            background: #10b981;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            margin-left: 8px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(4px);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            width: 90%;
+            max-width: 550px;
+            max-height: 85vh;
+            overflow-y: auto;
+            border-radius: 32px;
+            padding: 24px;
+        }
+
+        body.dark .modal-content {
+            background: #1e293b;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+            font-weight: bold;
+        }
+
+        .row-buttons {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #1e293b;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 40px;
+            z-index: 1100;
+            animation: fadein 0.3s;
+        }
+
+        @keyframes fadein {
+            from { opacity: 0; transform: translateY(20px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+
+        .result-stats {
+            padding: 10px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .sync-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.75rem;
+            padding: 4px 12px;
+            background: #e2e8f0;
+            border-radius: 20px;
+        }
+
+        body.dark .sync-indicator {
+            background: #334155;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 0.8rem;
+            opacity: 0.6;
+        }
+
+        @media (max-width: 768px) {
+            .lab-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="app-container">
+    <div class="header">
+        <h1>🔬 Sistem Informasi Laboratorium SMK NU 1 Kedungpring</h1>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+            <span id="realtimeStatus" class="realtime-badge">🔄 Real-Time Active</span>
+            <button id="darkModeToggle" class="btn btn-outline">🌙 Dark Mode</button>
+            <button id="adminLoginBtn" class="btn btn-primary">👑 Login Admin</button>
+            <button id="logoutBtn" class="btn" style="display:none;">🚪 Logout</button>
+        </div>
+    </div>
+
+    <!-- PENCARIAN -->
+    <div class="search-section">
+        <div class="search-title">
+            🔍 Cari Lab Tersedia Berdasarkan Jadwal
+            <div class="sync-indicator">
+                <span>🔄</span>
+                <span id="syncTimer">Auto-sync: 5s</span>
+            </div>
+        </div>
+        <div class="search-form">
+            <div class="form-group">
+                <label>📅 Hari</label>
+                <select id="searchDay">
+                    <option value="">Semua Hari</option>
+                    <option value="senin">Senin</option>
+                    <option value="selasa">Selasa</option>
+                    <option value="rabu">Rabu</option>
+                    <option value="kamis">Kamis</option>
+                    <option value="jumat">Jumat</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>⏰ Cari Jam</label>
+                <input type="text" id="searchTime" placeholder="Contoh: 09:00">
+            </div>
+            <div class="form-group">
+                <label>🏷️ Filter Status</label>
+                <select id="statusFilter">
+                    <option value="all">Semua</option>
+                    <option value="tersedia">✅ Tersedia</option>
+                    <option value="digunakan">⏳ Digunakan</option>
+                    <option value="perbaikan">🔧 Perbaikan</option>
+                </select>
+            </div>
+        </div>
+        <div class="search-buttons">
+            <button id="searchByTimeBtn" class="btn btn-primary">🔍 Cari</button>
+            <button id="resetSearchBtn" class="btn btn-outline">🔄 Reset</button>
+            <button id="manualSyncBtn" class="btn btn-warning">📡 Manual Sync</button>
+            <button id="toggleAutoSyncBtn" class="btn btn-outline">⏸️ Pause Auto-Sync</button>
+        </div>
+        <div class="filter-chips">
+            <span class="chip" data-filter="all">📋 Semua Lab</span>
+            <span class="chip" data-filter="tersedia">✅ Tersedia</span>
+            <span class="chip" data-filter="pagipagi">🌅 Pagi (09:00)</span>
+            <span class="chip" data-filter="siang">☀️ Siang (13:00)</span>
+            <span class="chip" data-filter="sore">🌇 Sore (15:00)</span>
+        </div>
+    </div>
+
+    <!-- LAB GRID -->
+    <div id="labContainer" class="lab-grid"></div>
+    <div id="resultStats" class="result-stats"></div>
+
+    <!-- TATA TERTIB -->
+    <div class="header" style="justify-content:space-between; flex-wrap:wrap;">
+        <span><strong>📜 Tata Tertib Laboratorium</strong></span>
+        <span id="tataTertibDisplay" style="font-style:italic;"></span>
+        <button id="editTataTertibBtn" class="btn" style="display:none;">✏️ Edit Tata Tertib</button>
+    </div>
+</div>
+
+<!-- MODAL -->
+<div id="adminModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <span id="modalTitle">Login Admin</span>
+            <button id="closeModal" style="background:none; border:none; font-size:24px; cursor:pointer;">✖️</button>
+        </div>
+        <div id="modalBody"></div>
+    </div>
+</div>
+
+<script>
+    // ========== DATA LABORATORIUM ==========
+    let labs = [
+        { 
+            id: 1, 
+            name: "Lab Komputer (SMP)", 
+            status: "tersedia", 
+            jadwal: "Senin 08:00-10:00 (Desain Grafis), Senin 13:00-15:00 (Kosong), Rabu 09:00-12:00 (Editing Video), Jumat 14:00-16:00 (Bebas)",
+            barang: "24 PC Core i5 (baik), 2 Proyektor (baik), 1 Sound System", 
+            perbaikan: "Tidak ada perbaikan",
+            lastUpdate: Date.now()
+        },
+        { 
+            id: 2, 
+            name: "Lab TIK (SMP)", 
+            status: "digunakan", 
+            jadwal: "Selasa 09:00-12:00 (Pemrograman Web), Rabu 14:00-16:00 (Database), Kamis 08:00-10:00 (Algoritma)",
+            barang: "30 PC Core i7 (28 baik, 2 rusak), 1 Server, 1 Switch", 
+            perbaikan: "2 PC perlu upgrade RAM",
+            lastUpdate: Date.now()
+        },
+        { 
+            id: 3, 
+            name: "Lab TKJ", 
+            status: "tersedia", 
+            jadwal: "Senin 10:00-12:00 (Routing), Selasa 13:00-15:00 (Keamanan Jaringan), Rabu 08:00-10:00 (Network Admin), Jumat 15:00-17:00 (Praktikum)",
+            barang: "20 PC, 8 Router Cisco, 4 Switch, 1 Server",
+            perbaikan: "Tidak ada",
+            lastUpdate: Date.now()
+        },
+        { 
+            id: 4, 
+            name: "Lab DKV", 
+            status: "perbaikan", 
+            jadwal: "-- SEDANG PERBAIKAN TOTAL --",
+            barang: "15 Workstation (6 baik, 9 rusak), 20 set Arduino, 15 ESP32, 10 Sensor",
+            perbaikan: "Perbaikan kelistrikan, solder station, dan 9 PC rusak",
+            lastUpdate: Date.now()
+        },
+        { 
+            id: 5, 
+            name: "Lab Akuntansi", 
+            status: "tersedia", 
+            jadwal: "Senin 08:00-09:30 (Animasi 2D), Kamis 13:00-15:00 (Motion Graphic), Jumat 16:00-18:00 (Free)",
+            barang: "12 iMac (semua baik), 1 Kamera DSLR, 1 Green Screen, 4 Tablet Grafis",
+            perbaikan: "Tidak ada",
+            lastUpdate: Date.now()
+        }
+    ];
+
+    let tataTertib = "📌 1. Dilarang makan/minum. 2. Sepatu tertutup. 3. Matikan PC setelah selesai. 4. Jaga kebersihan. 5. Laporkan kerusakan ke petugas. 6. Gunakan sesuai jadwal.";
+    let isAdmin = false;
+    const ADMIN_PASS = "adminfajar";
+    let currentSearchTime = null;
+    let currentStatusFilter = "all";
+    
+    // ========== REAL-TIME SYNC CONFIG ==========
+    let autoSyncInterval = null;
+    let autoSyncEnabled = true;
+    let syncIntervalSeconds = 5; // Auto-sync setiap 5 detik
+    let lastSyncTimestamp = 0;
+    let broadcastChannel = null;
+
+    // Broadcast Channel untuk komunikasi antar tab (real-time instan)
+    function initBroadcastChannel() {
+        if (window.BroadcastChannel) {
+            broadcastChannel = new BroadcastChannel('lab_sync_channel');
+            broadcastChannel.onmessage = (event) => {
+                if (event.data.type === 'DATA_UPDATED') {
+                    console.log('📡 Real-time update dari tab lain:', event.data.timestamp);
+                    refreshDataFromStorage();
+                    showToast('🔄 Data diperbarui dari tab lain (Real-Time)', 2000);
+                }
+            };
+        }
+    }
+
+    function broadcastUpdate() {
+        if (broadcastChannel) {
+            broadcastChannel.postMessage({
+                type: 'DATA_UPDATED',
+                timestamp: Date.now(),
+                source: 'lab_system'
+            });
+        }
+        // Juga trigger storage event untuk fallback
+        localStorage.setItem('lab_force_update', Date.now().toString());
+        setTimeout(() => localStorage.removeItem('lab_force_update'), 100);
+    }
+
+    // Simpan data ke localStorage
+    function saveData(triggerBroadcast = true) {
+        const saveData = {
+            labs: labs,
+            tataTertib: tataTertib,
+            timestamp: Date.now(),
+            version: '1.0'
+        };
+        localStorage.setItem("lab_data_v5", JSON.stringify(saveData));
+        
+        // Update timestamp display
+        const lastUpdate = new Date();
+        document.getElementById("realtimeStatus").innerHTML = `🔄 Last Sync: ${lastUpdate.toLocaleTimeString()}`;
+        document.getElementById("realtimeStatus").classList.remove("offline");
+        
+        if (triggerBroadcast) {
+            broadcastUpdate();
+        }
+    }
+
+    // Load data dari localStorage
+    function loadData() {
+        const stored = localStorage.getItem("lab_data_v5");
+        if(stored) {
+            try {
+                const parsed = JSON.parse(stored);
+                if(parsed.labs && parsed.labs.length > 0) {
+                    labs = parsed.labs;
+                }
+                if(parsed.tataTertib) {
+                    tataTertib = parsed.tataTertib;
+                }
+                lastSyncTimestamp = parsed.timestamp || Date.now();
+                console.log('📦 Data loaded from storage, last sync:', new Date(lastSyncTimestamp).toLocaleTimeString());
+            } catch(e) {
+                console.error('Error loading data:', e);
+            }
+        }
+        
+        // Update status display
+        if(lastSyncTimestamp > 0) {
+            const lastUpdate = new Date(lastSyncTimestamp);
+            document.getElementById("realtimeStatus").innerHTML = `🔄 Last Sync: ${lastUpdate.toLocaleTimeString()}`;
+        }
+    }
+
+    // Refresh data dari storage (untuk sync)
+    function refreshDataFromStorage() {
+        const stored = localStorage.getItem("lab_data_v5");
+        if(stored) {
+            try {
+                const parsed = JSON.parse(stored);
+                if(parsed.labs && parsed.labs.length > 0) {
+                    // Cek apakah ada perubahan
+                    if(JSON.stringify(labs) !== JSON.stringify(parsed.labs)) {
+                        labs = parsed.labs;
+                        if(parsed.tataTertib) tataTertib = parsed.tataTertib;
+                        lastSyncTimestamp = parsed.timestamp || Date.now();
+                        performSearch(); // Refresh tampilan dengan filter yang sama
+                        
+                        // Update status indicator
+                        const lastUpdate = new Date(lastSyncTimestamp);
+                        document.getElementById("realtimeStatus").innerHTML = `🔄 Last Sync: ${lastUpdate.toLocaleTimeString()}`;
+                        document.getElementById("realtimeStatus").classList.remove("offline");
+                        
+                        console.log('🔄 Data refreshed from storage');
+                    }
+                }
+            } catch(e) {
+                console.error('Error refreshing data:', e);
+            }
+        }
+    }
+
+    // Manual sync (forced)
+    function manualSync() {
+        refreshDataFromStorage();
+        showToast('✅ Manual sync completed - Data terbaru dimuat', 2000);
+    }
+
+    // Toggle auto-sync
+    function toggleAutoSync() {
+        autoSyncEnabled = !autoSyncEnabled;
+        const toggleBtn = document.getElementById("toggleAutoSyncBtn");
+        const syncTimerSpan = document.getElementById("syncTimer");
+        
+        if(autoSyncEnabled) {
+            startAutoSync();
+            toggleBtn.innerHTML = "⏸️ Pause Auto-Sync";
+            toggleBtn.classList.remove("btn-primary");
+            toggleBtn.classList.add("btn-outline");
+            syncTimerSpan.innerHTML = `Auto-sync: ${syncIntervalSeconds}s`;
+            showToast('✅ Auto-sync diaktifkan', 1500);
+        } else {
+            if(autoSyncInterval) {
+                clearInterval(autoSyncInterval);
+                autoSyncInterval = null;
+            }
+            toggleBtn.innerHTML = "▶️ Start Auto-Sync";
+            toggleBtn.classList.remove("btn-outline");
+            toggleBtn.classList.add("btn-primary");
+            syncTimerSpan.innerHTML = `Auto-sync: Paused`;
+            showToast('⏸️ Auto-sync dimatikan', 1500);
+        }
+    }
+
+    // Start auto-sync interval
+    function startAutoSync() {
+        if(autoSyncInterval) {
+            clearInterval(autoSyncInterval);
+        }
+        autoSyncInterval = setInterval(() => {
+            if(autoSyncEnabled) {
+                console.log('🔄 Auto-sync running...');
+                refreshDataFromStorage();
+                
+                // Update timer display countdown (opsional)
+                const syncTimerSpan = document.getElementById("syncTimer");
+                if(syncTimerSpan && autoSyncEnabled) {
+                    syncTimerSpan.innerHTML = `Auto-sync: ${syncIntervalSeconds}s`;
+                }
+            }
+        }, syncIntervalSeconds * 1000);
+    }
+
+    // Listen untuk storage event (cross-tab)
+    function listenForStorageEvents() {
+        window.addEventListener("storage", (e) => {
+            if(e.key === "lab_data_v5" || e.key === "lab_force_update") {
+                console.log('📡 Storage event detected from another tab');
+                refreshDataFromStorage();
+                showToast('🔄 Data diperbarui dari tab lain', 2000);
+            }
+        });
+    }
+
+    // ========== FUNGSI UTAMA ==========
+    function isLabAvailableAtTime(lab, timeStr, dayStr = null) {
+        if (lab.status === "perbaikan") return false;
+        if (!timeStr) return true;
+        
+        const targetMinutes = timeToMinutes(timeStr);
+        if (targetMinutes === null) return false;
+        
+        const schedules = lab.jadwal.split(',').map(s => s.trim());
+        
+        for (let schedule of schedules) {
+            let scheduleDay = null;
+            if (schedule.match(/(Senin|Selasa|Rabu|Kamis|Jumat)/i)) {
+                const dayMatch = schedule.match(/(Senin|Selasa|Rabu|Kamis|Jumat)/i);
+                if (dayMatch) scheduleDay = dayMatch[0].toLowerCase();
+            }
+            
+            if (dayStr && scheduleDay && scheduleDay !== dayStr.toLowerCase()) continue;
+            
+            const timeRangeMatch = schedule.match(/(\d{1,2}:\d{2})\s*-\s*(\d{1,2}:\d{2})/);
+            if (timeRangeMatch) {
+                const start = timeToMinutes(timeRangeMatch[1]);
+                const end = timeToMinutes(timeRangeMatch[2]);
+                if (start !== null && end !== null && targetMinutes >= start && targetMinutes < end) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    
+    function timeToMinutes(timeStr) {
+        if (!timeStr) return null;
+        const parts = timeStr.split(':');
+        if (parts.length < 2) return null;
+        const hours = parseInt(parts[0]);
+        const minutes = parseInt(parts[1]);
+        if (isNaN(hours) || isNaN(minutes)) return null;
+        return hours * 60 + minutes;
+    }
+    
+    function filterLabs(searchTime, searchDay, statusFilter) {
+        let filtered = [...labs];
+        if (statusFilter && statusFilter !== "all") {
+            filtered = filtered.filter(lab => lab.status === statusFilter);
+        }
+        if (searchTime && searchTime.trim() !== "") {
+            filtered = filtered.filter(lab => isLabAvailableAtTime(lab, searchTime, searchDay));
+        }
+        return filtered;
+    }
+    
+    function performSearch() {
+        const searchTime = document.getElementById("searchTime").value;
+        const searchDay = document.getElementById("searchDay").value;
+        const statusFilter = document.getElementById("statusFilter").value;
+        currentSearchTime = searchTime;
+        currentStatusFilter = statusFilter;
+        const filtered = filterLabs(searchTime, searchDay, statusFilter);
+        renderLabs(filtered, searchTime);
+    }
+    
+    function resetFilters() {
+        document.getElementById("searchTime").value = "";
+        document.getElementById("searchDay").value = "";
+        document.getElementById("statusFilter").value = "all";
+        currentSearchTime = null;
+        currentStatusFilter = "all";
+        renderLabs(null, null);
+    }
+    
+    function renderLabs(filteredLabs = null, searchTimeUsed = null) {
+        const container = document.getElementById("labContainer");
+        const labsToRender = filteredLabs || labs;
+        const statsDiv = document.getElementById("resultStats");
+        
+        if (filteredLabs && searchTimeUsed) {
+            statsDiv.innerHTML = `🔍 Menampilkan ${filteredLabs.length} dari ${labs.length} lab yang tersedia di jam ${searchTimeUsed}`;
+        } else if (currentStatusFilter !== "all") {
+            statsDiv.innerHTML = `🏷️ Filter: ${currentStatusFilter} → ${labsToRender.length} lab`;
+        } else {
+            statsDiv.innerHTML = `📋 Total ${labs.length} Laboratorium | 🔄 Auto-sync setiap ${syncIntervalSeconds} detik`;
+        }
+        
+        container.innerHTML = "";
+        labsToRender.forEach(lab => {
+            const card = document.createElement("div");
+            card.className = "lab-card";
+            
+            let statusText = "", statusClass = "";
+            if(lab.status === "tersedia") { statusText = "✅ Tersedia"; statusClass = "status-tersedia"; }
+            else if(lab.status === "digunakan") { statusText = "⏳ Sedang Digunakan"; statusClass = "status-digunakan"; }
+            else { statusText = "🔧 Perbaikan"; statusClass = "status-perbaikan"; }
+            
+            let matchBadge = "";
+            if (currentSearchTime && isLabAvailableAtTime(lab, currentSearchTime, document.getElementById("searchDay").value)) {
+                matchBadge = '<span class="match-badge">🕐 Tersedia di jam ini</span>';
+                card.classList.add("highlight");
+            }
+            
+            card.innerHTML = `
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;">
+                    <h2>🔬 ${escapeHtml(lab.name)}</h2>
+                    <span class="lab-status ${statusClass}">${statusText}</span>
+                </div>
+                ${matchBadge}
+                <div class="section-title">📅 Jadwal Praktikum</div>
+                <div class="info-item">${escapeHtml(lab.jadwal)}</div>
+                <div class="section-title">🖥️ Data Barang</div>
+                <div class="info-item">${escapeHtml(lab.barang)}</div>
+                <div class="section-title">🛠️ Laporan Perbaikan</div>
+                <div class="info-item">${escapeHtml(lab.perbaikan)}</div>
+                ${isAdmin ? `
+                    <div class="row-buttons" style="margin-top:16px;">
+                        <button class="btn editLabBtn" data-id="${lab.id}" style="background:#3b82f6; color:white;">✏️ Edit Lab</button>
+                        <button class="btn editStatusBtn" data-id="${lab.id}" style="background:#f97316;">📌 Ganti Status</button>
+                    </div>
+                ` : ''}
+            `;
+            container.appendChild(card);
+        });
+        
+        if(isAdmin) {
+            document.querySelectorAll(".editLabBtn").forEach(btn => {
+                btn.addEventListener("click", (e) => {
+                    const id = parseInt(btn.dataset.id);
+                    openEditLabModal(id);
+                });
+            });
+            document.querySelectorAll(".editStatusBtn").forEach(btn => {
+                btn.addEventListener("click", (e) => {
+                    const id = parseInt(btn.dataset.id);
+                    openStatusModal(id);
+                });
+            });
+        }
+        
+        document.getElementById("tataTertibDisplay").innerText = tataTertib;
+        document.getElementById("editTataTertibBtn").style.display = isAdmin ? "inline-block" : "none";
+    }
+    
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+    
+    // ========== ADMIN MODAL ==========
+    function openStatusModal(labId) {
+        const lab = labs.find(l => l.id === labId);
+        const modal = document.getElementById("adminModal");
+        const modalBody = document.getElementById("modalBody");
+        document.getElementById("modalTitle").innerText = `Ubah Status - ${lab.name}`;
+        modalBody.innerHTML = `
+            <label>Status Lab:</label>
+            <select id="newStatus">
+                <option value="tersedia" ${lab.status === "tersedia" ? "selected" : ""}>✅ Tersedia</option>
+                <option value="digunakan" ${lab.status === "digunakan" ? "selected" : ""}>⏳ Digunakan</option>
+                <option value="perbaikan" ${lab.status === "perbaikan" ? "selected" : ""}>🔧 Perbaikan</option>
+            </select>
+            <div class="row-buttons">
+                <button id="saveStatusBtn" class="btn btn-primary">💾 Simpan & Sync</button>
+                <button id="cancelStatusBtn" class="btn">❌ Batal</button>
+            </div>
+        `;
+        modal.style.display = "flex";
+        document.getElementById("saveStatusBtn").onclick = () => {
+            lab.status = document.getElementById("newStatus").value;
+            lab.lastUpdate = Date.now();
+            saveData(true);
+            performSearch();
+            closeModal();
+            showToast("✅ Status lab diubah & di-sync ke semua device!");
+        };
+        document.getElementById("cancelStatusBtn").onclick = closeModal;
+    }
+    
+    function openEditLabModal(labId) {
+        const lab = labs.find(l => l.id === labId);
+        const modal = document.getElementById("adminModal");
+        const modalBody = document.getElementById("modalBody");
+        document.getElementById("modalTitle").innerText = `✏️ Edit Lab - ${lab.name}`;
+        modalBody.innerHTML = `
+            <label>📛 Nama Lab</label>
+            <input type="text" id="editLabName" value="${escapeHtml(lab.name)}">
+            <label>📅 Jadwal</label>
+            <textarea id="editJadwal" rows="3">${escapeHtml(lab.jadwal)}</textarea>
+            <label>🖥️ Data Barang</label>
+            <textarea id="editBarang" rows="3">${escapeHtml(lab.barang)}</textarea>
+            <label>🛠️ Perbaikan</label>
+            <textarea id="editPerbaikan" rows="2">${escapeHtml(lab.perbaikan)}</textarea>
+            <label>🏷️ Status</label>
+            <select id="editStatus">
+                <option ${lab.status === "tersedia" ? "selected" : ""}>tersedia</option>
+                <option ${lab.status === "digunakan" ? "selected" : ""}>digunakan</option>
+                <option ${lab.status === "perbaikan" ? "selected" : ""}>perbaikan</option>
+            </select>
+            <div class="row-buttons">
+                <button id="confirmEditLab" class="btn btn-primary">💾 Update & Sync</button>
+            </div>
+        `;
+        modal.style.display = "flex";
+        document.getElementById("confirmEditLab").onclick = () => {
+            lab.name = document.getElementById("editLabName").value;
+            lab.jadwal = document.getElementById("editJadwal").value;
+            lab.barang = document.getElementById("editBarang").value;
+            lab.perbaikan = document.getElementById("editPerbaikan").value;
+            lab.status = document.getElementById("editStatus").value;
+            lab.lastUpdate = Date.now();
+            saveData(true);
+            performSearch();
+            closeModal();
+            showToast("✅ Data lab diupdate & di-sync ke semua device!");
+        };
+    }
+    
+    function openTataTertibModal() {
+        const modal = document.getElementById("adminModal");
+        const modalBody = document.getElementById("modalBody");
+        document.getElementById("modalTitle").innerText = "✏️ Edit Tata Tertib";
+        modalBody.innerHTML = `
+            <textarea id="tatibText" rows="5" style="width:100%;">${escapeHtml(tataTertib)}</textarea>
+            <button id="saveTatib" class="btn btn-primary" style="margin-top:15px;">💾 Simpan & Sync</button>
+        `;
+        modal.style.display = "flex";
+        document.getElementById("saveTatib").onclick = () => {
+            tataTertib = document.getElementById("tatibText").value;
+            saveData(true);
+            renderLabs();
+            closeModal();
+            showToast("✅ Tata tertib diperbarui & di-sync!");
+        };
+    }
+    
+    function showAdminLogin() {
+        const modal = document.getElementById("adminModal");
+        const modalBody = document.getElementById("modalBody");
+        document.getElementById("modalTitle").innerText = "🔐 Login Admin";
+        modalBody.innerHTML = `
+            <input type="password" id="adminPass" placeholder="Password: ">
+            <div class="row-buttons">
+                <button id="doLogin" class="btn btn-primary">🔓 Login</button>
+                <button id="closeLoginBtn" class="btn">❌ Batal</button>
+            </div>
+        `;
+        modal.style.display = "flex";
+        document.getElementById("doLogin").onclick = () => {
+            if(document.getElementById("adminPass").value === ADMIN_PASS) {
+                isAdmin = true;
+                sessionStorage.setItem("lab_admin", "true");
+                updateUIForAdmin();
+                closeModal();
+                showToast("👑 Admin mode aktif - Perubahan akan di-sync real-time!");
+                performSearch();
+            } else alert("❌ Password salah! Gunakan: admin123");
+        };
+        document.getElementById("closeLoginBtn").onclick = closeModal;
+    }
+    
+    function logoutAdmin() {
+        isAdmin = false;
+        sessionStorage.removeItem("lab_admin");
+        updateUIForAdmin();
+        performSearch();
+        showToast("👤 Mode user - Hanya melihat data");
+    }
+    
+    function updateUIForAdmin() {
+        document.getElementById("adminLoginBtn").style.display = isAdmin ? "none" : "inline-block";
+        document.getElementById("logoutBtn").style.display = isAdmin ? "inline-block" : "none";
+    }
+    
+    function closeModal() { document.getElementById("adminModal").style.display = "none"; }
+    
+    function showToast(msg, duration = 2500) {
+        const toast = document.createElement("div");
+        toast.className = "toast";
+        toast.innerText = msg;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), duration);
+    }
+    
+    function initDarkMode() {
+        if(localStorage.getItem("darkMode") === "true") document.body.classList.add("dark");
+        document.getElementById("darkModeToggle").onclick = () => {
+            document.body.classList.toggle("dark");
+            localStorage.setItem("darkMode", document.body.classList.contains("dark"));
+        };
+    }
+    
+    function initChips() {
+        document.querySelectorAll(".chip").forEach(chip => {
+            chip.addEventListener("click", () => {
+                const filter = chip.dataset.filter;
+                if(filter === "all") resetFilters();
+                else if(filter === "tersedia") {
+                    document.getElementById("statusFilter").value = "tersedia";
+                    performSearch();
+                } else if(["pagipagi", "siang", "sore"].includes(filter)) {
+                    let timeMap = { pagipagi: "09:00", siang: "13:00", sore: "15:00" };
+                    document.getElementById("searchTime").value = timeMap[filter];
+                    document.getElementById("statusFilter").value = "all";
+                    performSearch();
+                }
+            });
+        });
+    }
+    
+    // ========== INITIALIZATION ==========
+    function init() {
+        loadData();
+        initDarkMode();
+        initBroadcastChannel();
+        listenForStorageEvents();
+        startAutoSync();
+        
+        if(sessionStorage.getItem("lab_admin") === "true") isAdmin = true;
+        updateUIForAdmin();
+        renderLabs();
+        initChips();
+        
+        document.getElementById("searchByTimeBtn").onclick = performSearch;
+        document.getElementById("resetSearchBtn").onclick = resetFilters;
+        document.getElementById("manualSyncBtn").onclick = manualSync;
+        document.getElementById("toggleAutoSyncBtn").onclick = toggleAutoSync;
+        document.getElementById("adminLoginBtn").onclick = showAdminLogin;
+        document.getElementById("logoutBtn").onclick = logoutAdmin;
+        document.getElementById("closeModal").onclick = closeModal;
+        document.getElementById("editTataTertibBtn").onclick = () => { 
+            if(isAdmin) openTataTertibModal(); 
+            else showToast("⚠️ Hanya admin"); 
+        };
+        window.onclick = (e) => { if(e.target === document.getElementById("adminModal")) closeModal(); };
+        
+        showToast("✅ Sistem siap! Auto-sync setiap 5 detik", 3000);
+    }
+    
+    init();
+</script>
+</body>
+</html>
